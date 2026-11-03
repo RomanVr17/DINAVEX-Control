@@ -1,12 +1,8 @@
 function transferencias = checkpoint5_transferencias(numerico)
-
-% CHECKPOINT 5 - FUNCIONES DE TRANSFERENCIA
-% Obtiene las funciones de transferencia desde el par
-% de entrada hacia los cuatro estados del robot a partir
+%Obtiene las funciones de transferencia desde el par de entrada hacia los cuatro estados del robot a partir ...
 % de las matrices numericas A y B.
 
-% RECUPERAR MATRICES DEL MODELO LINEAL
-
+%RECUPERAR MATRICES DEL MODELO LINEAL
 A = numerico.A;
 B = numerico.B;
 
@@ -16,15 +12,15 @@ B = numerico.B;
 % x3 = theta    -> angulo de inclinacion
 % x4 = omega_p  -> velocidad angular
 
-C = eye(4);
+C = eye(4);  %Identidad
 
-% No existe paso directo de la entrada hacia las salidas
+%No existe paso directo de la entrada hacia las salidas
 D = zeros(4,1);
 
-% CREAR MODELO EN ESPACIO DE ESTADOS
+%CREAR MODELO EN ESPACIO DE ESTADOS
 sistema_ss = ss(A, B, C, D);
 
-% CONVERTIR A FUNCIONES DE TRANSFERENCIA
+%CONVERTIR A FUNCIONES DE TRANSFERENCIA
 G = tf(sistema_ss);
 
 % SEPARAR CADA FUNCION DE TRANSFERENCIA

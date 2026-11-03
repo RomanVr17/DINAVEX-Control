@@ -1,11 +1,7 @@
 function modelo = checkpoint1_energias()
-%Calcula simbolicamente la cinematica, energias, Lagrangiano
-%y funcion de disipacion de Rayleigh del robot.
+%Calcula simbolicamente la cinematica, energias, Lagrangiano y funcion de disipacion de Rayleigh del robot.
 
-%CINEMATICA, ENERGIAS, LAGRANGIANO Y RAYLEIGH
 syms mh mr Ip Ir l R c_v c_w g real
-
-%VARIABLES GENERALIZADAS Y VELOCIDADES
 syms dr theta v omega_p real
 
 %POSICION DEL CENTRO DE MASA DEL CUERPO
@@ -22,7 +18,6 @@ vH = [v + l*omega_p*cos(theta);
 omega_r = v/R;
 
 %ENERGIA CINETICA DE LAS RUEDAS
-
 Kr = (1/2)*mr*v^2 + (1/2)*Ir*omega_r^2;
 Kr = simplify(Kr);
 
@@ -34,7 +29,7 @@ Kp = simplify(expand(Kp));
 K = simplify(Kp + Kr);
 
 %ENERGIA POTENCIAL
-Vr = sym(0);
+Vr = 0;
 Vp = mh*g*l*cos(theta);
 V = simplify(Vp + Vr);
 
@@ -79,5 +74,4 @@ modelo.V  = V;
 %Lagrangiano y Rayleigh
 modelo.L  = L;
 modelo.Rp = Rp;
-
 end

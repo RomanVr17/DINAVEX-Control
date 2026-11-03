@@ -66,7 +66,7 @@ Dtheta = limpiar_inicio(Dtheta,tol);
 Ndr = limpiar_inicio(Ndr,tol);
 Ddr = limpiar_inicio(Ddr,tol);
 
-%% Normalizar denominadores
+% Normalizar denominadores
 Ntheta = Ntheta/Dtheta(1);
 Dtheta = Dtheta/Dtheta(1);
 
@@ -234,7 +234,7 @@ fprintf('----------------------------------------\n');
 fprintf('BUSQUEDA EXPLORATORIA DE ESTABILIDAD\n');
 fprintf('----------------------------------------\n\n');
 
-%% Rangos iniciales
+% Rangos iniciales
 Kp_theta_vec = linspace(-10,10,9);
 
 Kd_theta_vec = linspace(-1,1,9);
@@ -273,27 +273,27 @@ for i1 = 1:length(Kp_theta_vec)
 
                 Ki_dr = Ki_dr_vec(i4);
 
-                %% Construir polinomio para estas ganancias
+                % Construir polinomio para estas ganancias
                 P = P0 ...
                     + Kp_theta*P_Kpt ...
                     + Kd_theta*P_Kdt ...
                     + Kp_dr*P_Kpdr ...
                     + Ki_dr*P_Kidr;
 
-                %% Obtener polos
+                % Obtener polos
                 polos = roots(P);
 
-                %% Polo mas a la derecha
+                % Polo mas a la derecha
                 max_real = max(real(polos));
 
                 numero_evaluadas = numero_evaluadas + 1;
 
-                %% Comprobar estabilidad
+                % Comprobar estabilidad
                 if max_real < -tol_estabilidad
 
                     numero_estables = numero_estables + 1;
 
-                    %% Guardar mejor candidato
+                    % Guardar mejor candidato
                     if max_real < mejor_margen
 
                         mejor_margen = max_real;

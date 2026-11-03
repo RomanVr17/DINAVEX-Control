@@ -1,5 +1,4 @@
 function pd = checkpoint8_viabilidad_PD_equilibrio(ft)
-%CHECKPOINT 8 - VIABILIDAD DEL CONTROLADOR PD DE EQUILIBRIO
 %Analiza la relacion entre G_theta y G_omega_p, muestra polos y ceros,
 %construye la ecuacion caracteristica con un PD ideal y verifica,
 %mediante condiciones de Routh-Hurwitz, si el PD angular aislado

@@ -1,11 +1,5 @@
 function lineal = checkpoint4_linealizacion(estados)
-
-%Calcula las matrices Jacobianas A y B del modelo no lineal
-%y las evalua alrededor del punto de equilibrio vertical.
-
-%CHECKPOINT 4
-%LINEALIZACION MEDIANTE MATRICES JACOBIANAS
-%RECUPERAR VECTOR DE ESTADOS, MODELO NO LINEAL Y ENTRADA
+%Calcula las matrices Jacobianas A y B del modelo no lineal y las evalua alrededor del punto de equilibrio vertical.
 
 x   = estados.x;
 f   = estados.f;
@@ -17,7 +11,6 @@ tau = estados.tau;
 %La linealizacion de primer orden se obtiene mediante:
 %A = df/dx
 %B = df/dtau
-
 A_sym = jacobian(f, x);
 B_sym = jacobian(f, tau);
 
@@ -55,5 +48,4 @@ lineal.A_sym = A_sym;
 lineal.B_sym = B_sym;
 lineal.A = A_lin;
 lineal.B = B_lin;
-
 end

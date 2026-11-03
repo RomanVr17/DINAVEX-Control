@@ -1,15 +1,12 @@
 %MODELO SIMBOLICO DINAVEX
 %ARCHIVO PRINCIPAL
-
 clear
 clc
 
 %CHECKPOINT 1 CINEMATICA Y ENERGIAS
-
 modelo = checkpoint1_energias();
 
 %MOSTRAR RESULTADOS DEL CHECKPOINT 1
-
 disp('======================================')
 disp('CHECKPOINT 1: CINEMATICA Y ENERGIAS')
 disp('======================================')
@@ -47,7 +44,6 @@ disp('Disipacion de Rayleigh Rp:')
 pretty(modelo.Rp)
 
 %CHECKPOINT 2 ECUACIONES DE EULER-LAGRANGE
-
 ecuaciones = checkpoint2_euler_lagrange(modelo);
 
 %MOSTRAR RESULTADOS DEL CHECKPOINT 2
@@ -58,7 +54,6 @@ disp('CHECKPOINT 2: EULER-LAGRANGE')
 disp('======================================')
 
 %PRIMERA ECUACION
-
 disp(' ')
 disp('---------- ECUACION 1 ----------')
 
@@ -79,7 +74,6 @@ disp('Tau_1:')
 pretty(ecuaciones.tau1)
 
 %SEGUNDA ECUACION
-
 disp(' ')
 disp('---------- ECUACION 2 ----------')
 
@@ -98,7 +92,6 @@ pretty(ecuaciones.dRp_domega)
 disp(' ')
 disp('Tau_2:')
 pretty(ecuaciones.tau2)
-
 
 %CHECKPOINT 3
 estados = checkpoint3_estados(modelo, ecuaciones);
@@ -154,146 +147,167 @@ disp('Matriz B linealizada:')
 pretty(lineal.B)
 
 % =========================================================
+% EVALUACION NUMERICA CON LOS PARAMETROS DE DINAVEX
+% =========================================================
+
+p_dinavex = parametros_DINAVEX();
+num_dinavex = evaluar_modelo_lineal( modelo, lineal, p_dinavex);
+
+disp(' ')
+disp('======================================')
+disp('MODELO NUMERICO DE DINAVEX')
+disp('======================================')
+
+disp(' ')
+disp('Matriz A de DINAVEX:')
+disp(num_dinavex.A)
+
+disp(' ')
+disp('Matriz B de DINAVEX:')
+disp(num_dinavex.B)
+
+% CHECKPOINT 5 - FUNCIONES DE TRANSFERENCIA DINAVEX
+ft_dinavex = checkpoint5_transferencias(num_dinavex);
+
+disp(' ')
+disp('======================================')
+disp('FUNCIONES DE TRANSFERENCIA - DINAVEX')
+disp('======================================')
+
+disp(' ')
+disp('Posicion / Par:')
+ft_dinavex.G_dr
+
+disp(' ')
+disp('Velocidad / Par:')
+ft_dinavex.G_v
+
+disp(' ')
+disp('Angulo / Par:')
+ft_dinavex.G_theta
+
+disp(' ')
+disp('Velocidad angular / Par:')
+ft_dinavex.G_omega_p
+
+% CHECKPOINT 6 - CONTROLABILIDAD DINAVEX
+control_dinavex = checkpoint6_controlabilidad(num_dinavex.A, num_dinavex.B);
+
+% CHECKPOINT 7 - ANALISIS EN LAZO ABIERTO
+analisis_dinavex = checkpoint7_analisis_lazo_abierto(ft_dinavex, num_dinavex);
+                
+% CHECKPOINT 8 - VIABILIDAD DEL PD DE EQUILIBRIO
+%pd_dinavex = checkpoint8_viabilidad_PD_equilibrio(ft_dinavex);
+
+% CHECKPOINT 9 - ANALISIS CONJUNTO PD-PI
+%conjunto_dinavex = checkpoint9_PD_PI_conjunto(ft_dinavex);
+
+% CHECKPOINT 10 - PD DE EQUILIBRIO + PI DE VELOCIDAD
+control_vel_dinavex = checkpoint10_PD_PI_velocidad(ft_dinavex);
+
+% CHECKPOINT 11 - RESPUESTA TEMPORAL LINEAL
+respuesta_dinavex = checkpoint11_respuesta_temporal_lineal( num_dinavex, control_vel_dinavex);
+
+% CHECKPOINT 12 - REGION DE RECUPERACION NO LINEAL
+region_dinavex = checkpoint12_region_recuperacion_no_lineal( estados, p_dinavex, control_vel_dinavex);
+
+%CHECKPOINT 13
+tau_limites = [1 2 4 6 7 8 9 9.05 9.1 9.15 9.2 10 11]; % N*m, par total
+saturacion_dinavex = checkpoint13_saturacion_actuador(estados, control_vel_dinavex, region_dinavex, tau_limites, p_dinavex.R);
+
+
+
+
+
+
+% =========================================================
 % EVALUACION NUMERICA CON LOS PARAMETROS DE ARTURO
 % =========================================================
 
-p_arturo = parametros_arturo();
-num_arturo = evaluar_modelo_lineal(modelo, lineal, p_arturo);
-
-disp(' ')
-disp('======================================')
-disp('MODELO NUMERICO CON PARAMETROS DE ARTURO')
-disp('======================================')
-
-disp(' ')
-disp('Matriz A numerica:')
-disp(num_arturo.A)
-
-disp(' ')
-disp('Matriz B numerica:')
-disp(num_arturo.B)
+% p_arturo = parametros_arturo();
+% num_arturo = evaluar_modelo_lineal(modelo, lineal, p_arturo);
+% 
+% disp(' ')
+% disp('======================================')
+% disp('MODELO NUMERICO CON PARAMETROS DE ARTURO')
+% disp('======================================')
+% 
+% disp(' ')
+% disp('Matriz A numerica:')
+% disp(num_arturo.A)
+% 
+% disp(' ')
+% disp('Matriz B numerica:')
+% disp(num_arturo.B)
 
 % =========================================================
 % CHECKPOINT 5 - FUNCIONES DE TRANSFERENCIA
 % =========================================================
 
-ft_arturo = checkpoint5_transferencias(num_arturo);
-
-disp(' ')
-disp('======================================')
-disp('FUNCIONES DE TRANSFERENCIA ARTURO')
-disp('======================================')
-
-disp(' ')
-disp('Posicion / Par:')
-ft_arturo.G_dr
-
-disp(' ')
-disp('Velocidad / Par:')
-ft_arturo.G_v
-
-disp(' ')
-disp('Angulo / Par:')
-ft_arturo.G_theta
-
-disp(' ')
-disp('Velocidad angular / Par:')
-ft_arturo.G_omega_p
+% ft_arturo = checkpoint5_transferencias(num_arturo);
+% 
+% disp(' ')
+% disp('======================================')
+% disp('FUNCIONES DE TRANSFERENCIA ARTURO')
+% disp('======================================')
+% 
+% disp(' ')
+% disp('Posicion / Par:')
+% ft_arturo.G_dr
+% 
+% disp(' ')
+% disp('Velocidad / Par:')
+% ft_arturo.G_v
+% 
+% disp(' ')
+% disp('Angulo / Par:')
+% ft_arturo.G_theta
+% 
+% disp(' ')
+% disp('Velocidad angular / Par:')
+% ft_arturo.G_omega_p
 
 % =========================================================
 % CHECKPOINT 6 - CONTROLABILIDAD
 % =========================================================
 
-control_arturo = checkpoint6_controlabilidad(num_arturo.A, num_arturo.B);
+% control_arturo = checkpoint6_controlabilidad(num_arturo.A, num_arturo.B);
 
 % =========================================================
 % CHECKPOINT 7 - ANALISIS EN LAZO ABIERTO
 % =========================================================
 
-analisis_arturo = checkpoint7_analisis_lazo_abierto(ft_arturo, num_arturo);
+% analisis_arturo = checkpoint7_analisis_lazo_abierto(ft_arturo, num_arturo);
                 
 % =========================================================
 % CHECKPOINT 8 - VIABILIDAD DEL PD DE EQUILIBRIO
 % =========================================================
-pd_arturo = checkpoint8_viabilidad_PD_equilibrio(ft_arturo);
+% pd_arturo = checkpoint8_viabilidad_PD_equilibrio(ft_arturo);
 
 % =========================================================
 % CHECKPOINT 9 - ANALISIS CONJUNTO PD-PI
-conjunto_arturo = checkpoint9_PD_PI_conjunto(ft_arturo);
+% conjunto_arturo = checkpoint9_PD_PI_conjunto(ft_arturo);
 % =========================================================
 
 % =========================================================
 % CHECKPOINT 10 - PD DE EQUILIBRIO + PI DE VELOCIDAD
-control_vel_arturo = checkpoint10_PD_PI_velocidad(ft_arturo);
+% control_vel_arturo = checkpoint10_PD_PI_velocidad(ft_arturo);
 % =========================================================
 
 % =========================================================
 % CHECKPOINT 11 - RESPUESTA TEMPORAL LINEAL
-respuesta_arturo = checkpoint11_respuesta_temporal_lineal( ...
-    num_arturo, control_vel_arturo);
+% respuesta_arturo = checkpoint11_respuesta_temporal_lineal( ...
+%     num_arturo, control_vel_arturo);
 % =========================================================
 
 % =========================================================
 % CHECKPOINT 12 - REGION DE RECUPERACION NO LINEAL
-region_arturo = checkpoint12_region_recuperacion_no_lineal( ...
-    estados, p_arturo, control_vel_arturo);
+% region_arturo = checkpoint12_region_recuperacion_no_lineal( ...
+%     estados, p_arturo, control_vel_arturo);
 % =========================================================
 
 % =========================================================
 %CHECKPOINT 13
-tau_limites = [0.5 1 2 4 6 8 10 12]; % N*m, par total
-saturacion_arturo = checkpoint13_saturacion_actuador(estados, control_vel_arturo, region_arturo, tau_limites);
+% tau_limites = [0.5 1 2 4 6 8 10 12]; % N*m, par total
+% saturacion_arturo = checkpoint13_saturacion_actuador(estados, control_vel_arturo, region_arturo, tau_limites);
 % =========================================================
-
-% =========================================================
-% EVALUACION NUMERICA CON LOS PARAMETROS DE DINAVEX
-% =========================================================
-
-% p_dinavex = parametros_DINAVEX();
-% num_dinavex = evaluar_modelo_lineal( modelo, lineal, p_dinavex);
-% 
-% disp(' ')
-% disp('======================================')
-% disp('MODELO NUMERICO DE DINAVEX')
-% disp('======================================')
-% 
-% disp(' ')
-% disp('Matriz A de DINAVEX:')
-% disp(num_dinavex.A)
-% 
-% disp(' ')
-% disp('Matriz B de DINAVEX:')
-% disp(num_dinavex.B)
-
-% =========================================================
-% CHECKPOINT 5 - FUNCIONES DE TRANSFERENCIA DINAVEX
-% =========================================================
-
-% ft_dinavex = checkpoint5_transferencias(num_dinavex);
-% 
-% disp(' ')
-% disp('======================================')
-% disp('FUNCIONES DE TRANSFERENCIA - DINAVEX')
-% disp('======================================')
-% 
-% disp(' ')
-% disp('Posicion / Par:')
-% ft_dinavex.G_dr
-% 
-% disp(' ')
-% disp('Velocidad / Par:')
-% ft_dinavex.G_v
-% 
-% disp(' ')
-% disp('Angulo / Par:')
-% ft_dinavex.G_theta
-% 
-% disp(' ')
-% disp('Velocidad angular / Par:')
-% ft_dinavex.G_omega_p
-
-% =========================================================
-% CHECKPOINT 6 - CONTROLABILIDAD DINAVEX
-% =========================================================
-
-% control_dinavex = checkpoint6_controlabilidad(num_dinavex.A, num_dinavex.B);

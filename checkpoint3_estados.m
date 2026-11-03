@@ -1,10 +1,5 @@
 function estados = checkpoint3_estados(modelo, ecuaciones)
-
-%Resuelve simultaneamente las ecuaciones dinamicas para
-%obtener x_dot = f(x,tau) del modelo no lineal.
-
-%CHECKPOINT 3
-%MODELO NO LINEAL EN ESPACIO DE ESTADOS
+%Resuelve simultaneamente las ecuaciones dinamicas para obtener x_dot = f(x,tau) del modelo no lineal.
 
 %RECUPERAR VARIABLES DEL CHECKPOINT 1
 dr      = modelo.dr;
@@ -30,18 +25,16 @@ eq2 = ecuaciones.tau2 == 0;
 
 %SEPARAR LAS ACELERACIONES EN FORMA MATRICIAL
 %Las ecuaciones tienen la forma:
-%M(q) * [dv; domega_p] = b(q, dq, tau)
-%donde las incógnitas son dv y domega_p.
+%M(q) * [dv; domega_p] = b(q, dq, tau) donde las incógnitas son dv y domega_p.
 
 [M, b] = equationsToMatrix([eq1; eq2], [dv; domega_p]);
 M = simplify(M);
 b = simplify(b);
 
 %RESOLVER EL SISTEMA SIMULTANEO
-
-aceleraciones = M \ b;
-dv_sol = simplify(aceleraciones(1));
-domega_p_sol = simplify(aceleraciones(2));
+aceleraciones = M \ b;                      % Resolver el sistema simultaneo para las aceleraciones
+dv_sol = simplify(aceleraciones(1));        % Primer elemento: aceleracion lineal
+domega_p_sol = simplify(aceleraciones(2));  % Segundo elemento: aceleracion angular
 
 %VECTOR DE ESTADOS
 %x1 = dr
@@ -65,7 +58,6 @@ f4 = domega_p_sol;
 f = [f1; f2; f3; f4];
 
 %GUARDAR RESULTADOS
-
 estados.tau = tau;
 estados.eq1 = eq1;
 estados.eq2 = eq2;
@@ -79,5 +71,4 @@ estados.f2 = f2;
 estados.f3 = f3;
 estados.f4 = f4;
 estados.f = f;
-
 end

@@ -1,8 +1,6 @@
 function analisis = checkpoint7_analisis_lazo_abierto(ft, numerico)
-%CHECKPOINT 7 - ANALISIS EN LAZO ABIERTO
-%Analiza polos, ceros y estabilidad de las cuatro FT 
-%Posteriormente compara los resultados con los valores
-%propios de A y simula los cuatro estados ante una condicion inicial.
+%Analiza polos, ceros y estabilidad de las cuatro FT, Posteriormente compara los resultados con los valores ...
+% propios de A y simula los cuatro estados ante una condicion inicial.
 
 fprintf('\n========================================\n');
 fprintf('CHECKPOINT 7 - ANALISIS EN LAZO ABIERTO\n');
@@ -20,22 +18,19 @@ G_v_min       = minreal(G_v);
 G_theta_min   = minreal(G_theta);
 G_omega_p_min = minreal(G_omega_p);
 
-% Organizar funciones de transferencia
+% Organizar funciones de transferencia en una celda
 G = {G_dr_min, G_v_min, G_theta_min, G_omega_p_min};
-nombres = {
-    'tau -> d_r'
-    'tau -> v'
-    'tau -> theta'
-    'tau -> omega_p'
-};
 
+% Crea otra celda con nombres de texto.
+nombres = {'tau -> d_r' 'tau -> v' 'tau -> theta' 'tau -> omega_p'};
+
+% Crea una celda vacia de 4x1
 analisis_ft = cell(4,1);
 
-% Analisis de polos, ceros y estabilidad
+% Definir una tolerancia numérica
 tol = 1e-8;
 
 for i = 1:4
-
     fprintf('----------------------------------------\n');
     fprintf('FT %d: %s\n', i, nombres{i});
     fprintf('----------------------------------------\n');
@@ -90,7 +85,7 @@ x0 = [0; 0; 0.1; 0];
 % Tiempo de simulacion
 t = 0:0.001:1;
 
-% Simulacion en lazo abierto
+% Simulacion en lazo abierto, calcula la respuesta libre del sistema debido únicamente a la condición inicial.
 [~, t, x] = initial(sys_ss, x0, t);
 
 % Graficas de los cuatro estados
@@ -123,7 +118,6 @@ grid on;
 xlabel('Tiempo (s)');
 ylabel('\omega_p (rad/s)');
 title('Velocidad angular');
-
 
 % Guardar resultados
 analisis.ft = analisis_ft;
